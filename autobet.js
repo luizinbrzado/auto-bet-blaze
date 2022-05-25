@@ -15,9 +15,9 @@ console.log("Rodando web scraping");
     let serviceBuilder = new chrome.ServiceBuilder(process.env.CHROME_DRIVER_PATH);
 
     //Don't forget to add these for heroku
-    // options.addArguments("--headless");
-    // options.addArguments("--disable-gpu");
-    // options.addArguments("--no-sandbox");
+    options.addArguments("--headless");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
     options.addArguments("--window-size=1920,1080")
 
 
@@ -68,7 +68,7 @@ console.log("Rodando web scraping");
     let horariosSite = await driver.findElement(webdriver.By.xpath('//*[@id="comp-l10j12x6"]')).getText();
     
     await driver.sleep(5000)
-    
+
     let now = new Date();
 
     fs.writeFile(`${now.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' }).replace(/\//g, '_')}.json`,
