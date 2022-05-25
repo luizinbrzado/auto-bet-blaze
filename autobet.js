@@ -89,197 +89,199 @@ console.log("Rodando web scraping");
         }
     );
 
-    await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div/div[1]/a')).click()
-    await driver.sleep(2000)
-    await driver.findElement(webdriver.By.xpath('//*[@id="auth-modal"]/div[2]/form/div[1]/div/input')).sendKeys(process.env.USER)
-    await driver.findElement(webdriver.By.xpath('//*[@id="auth-modal"]/div[2]/form/div[2]/div/input')).sendKeys(process.env.PASS)
-    await driver.findElement(webdriver.By.xpath('//*[@id="auth-modal"]/div[2]/form/div[4]/button')).click()
+    console.log(await driver.findElement(webdriver.By.xpath('/hmtl')));
 
-    await driver.sleep(5000)
+    // await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div/div[1]/a')).click()
+    // await driver.sleep(2000)
+    // await driver.findElement(webdriver.By.xpath('//*[@id="auth-modal"]/div[2]/form/div[1]/div/input')).sendKeys(process.env.USER)
+    // await driver.findElement(webdriver.By.xpath('//*[@id="auth-modal"]/div[2]/form/div[2]/div/input')).sendKeys(process.env.PASS)
+    // await driver.findElement(webdriver.By.xpath('//*[@id="auth-modal"]/div[2]/form/div[4]/button')).click()
 
-    let lastId = '';
+    // await driver.sleep(5000)
 
-    let lossSequence = 0;
+    // let lastId = '';
 
-    let perdaGanho = 0;
+    // let lossSequence = 0;
 
-    let gale = 0;
+    // let perdaGanho = 0;
 
-    let win = 0;
+    // let gale = 0;
 
-    let winsNecessarias = 10;
+    // let win = 0;
 
-    let betLoss = 0;
+    // let winsNecessarias = 10;
 
-    let verifyNextResult = false;
+    // let betLoss = 0;
 
-    let qtdLossAposta = 6;
+    // let verifyNextResult = false;
 
-    let today = new Date();
+    // let qtdLossAposta = 6;
 
-    let betDay = new Date();
+    // let today = new Date();
 
-    let indice = ''
+    // let betDay = new Date();
 
-    await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[2]/div[1]/input')).sendKeys(2);
+    // let indice = ''
 
-    await driver.sleep(1000);
+    // await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[2]/div[1]/input')).sendKeys(2);
 
-    await driver.takeScreenshot().then(
-        function (image) {
-            require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
-        }
-    );
+    // await driver.sleep(1000);
 
-    let valorConta = await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div[3]/div/a/div/div/div')).getText();
+    // await driver.takeScreenshot().then(
+    //     function (image) {
+    //         require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
+    //     }
+    // );
 
-    console.log(valorConta);
+    // let valorConta = await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div[3]/div/a/div/div/div')).getText();
 
-    let horarios = []
+    // console.log(valorConta);
 
-    fs.readFile('21_05_2022.json', 'utf8', (err, data) => {
-        err ?
-            console.error(err)
-            :
-            horarios = JSON.parse(data);
-    });
+    // let horarios = []
 
-    let valorAposta = 2;
+    // fs.readFile('21_05_2022.json', 'utf8', (err, data) => {
+    //     err ?
+    //         console.error(err)
+    //         :
+    //         horarios = JSON.parse(data);
+    // });
 
-    let buttonBet = '';
+    // let valorAposta = 2;
 
-    now = new Date();
+    // let buttonBet = '';
 
-    horarios.map((e, i) => {
-        if (now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5) > e) {
-            horarios.splice(i, 1);
-        }
-    })
+    // now = new Date();
 
-    await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(2)
+    // horarios.map((e, i) => {
+    //     if (now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5) > e) {
+    //         horarios.splice(i, 1);
+    //     }
+    // })
 
-    console.log(horarios);
+    // await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(2)
 
-    while (true) {
+    // console.log(horarios);
 
-        if (now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5) > horarios[0])
-            horarios.splice(0, 1)
+    // while (true) {
 
-        let lastResult;
-        let actualId;
+    //     if (now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5) > horarios[0])
+    //         horarios.splice(0, 1)
 
-        await driver.sleep(500)
+    //     let lastResult;
+    //     let actualId;
 
-        now = new Date();
+    //     await driver.sleep(500)
 
-        console.log(buttonBet);
+    //     now = new Date();
 
-        try {
-            actualId = await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getId()
-            lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
-        } catch (err) {
-            console.log("Não deu pra pegar o ID da classe");
-            lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
-            return null;
-        }
+    //     console.log(buttonBet);
 
-        try {
-            buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
-        } catch (err) {
-            console.log("Não deu pra pegar info do BOTÃO");
-            return null;
-        }
+    //     try {
+    //         actualId = await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getId()
+    //         lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
+    //     } catch (err) {
+    //         console.log("Não deu pra pegar o ID da classe");
+    //         lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
+    //         return null;
+    //     }
 
-        if (actualId != lastId) {
+    //     try {
+    //         buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
+    //     } catch (err) {
+    //         console.log("Não deu pra pegar info do BOTÃO");
+    //         return null;
+    //     }
 
-            try {
-                buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
-                if (lastResult === NaN)
-                    lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
-            } catch (err) {
-                console.log("Não deu pra pegar info do BOTÃO");
-                return null;
-            }
+    //     if (actualId != lastId) {
 
-            console.log(buttonBet);
+    //         try {
+    //             buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
+    //             if (lastResult === NaN)
+    //                 lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
+    //         } catch (err) {
+    //             console.log("Não deu pra pegar info do BOTÃO");
+    //             return null;
+    //         }
 
-            console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
+    //         console.log(buttonBet);
 
-            if (verifyNextResult) {
-                gale++;
-                if (gale === 3) {
-                    if (lastResult > 2)
-                        console.log("WIN");
-                    else
-                        console.log("LOSS G2");
+    //         console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
 
-                    verifyNextResult = false;
-                    gale = 0;
-                } else if (lastResult > 2) {
+    //         if (verifyNextResult) {
+    //             gale++;
+    //             if (gale === 3) {
+    //                 if (lastResult > 2)
+    //                     console.log("WIN");
+    //                 else
+    //                     console.log("LOSS G2");
 
-                    console.log("WIN");
+    //                 verifyNextResult = false;
+    //                 gale = 0;
+    //             } else if (lastResult > 2) {
 
-                    console.log("Retirando", horarios[indice], indice);
+    //                 console.log("WIN");
 
-                    horarios.splice(indice, 1);
+    //                 console.log("Retirando", horarios[indice], indice);
 
-                    verifyNextResult = false;
-                    gale = 0;
+    //                 horarios.splice(indice, 1);
 
-                } else {
+    //                 verifyNextResult = false;
+    //                 gale = 0;
 
-                    if (gale === 1)
-                        console.log('LOSS SG');
-                    else
-                        console.log(`LOSS G1`);
+    //             } else {
 
-                    await driver.sleep(6000)
+    //                 if (gale === 1)
+    //                     console.log('LOSS SG');
+    //                 else
+    //                     console.log(`LOSS G1`);
 
-                    if (!buttonBet) {
+    //                 await driver.sleep(6000)
 
-                        console.log(`Apostando G${gale}`, valorAposta * 2 ** gale);
-                        console.log("Verificando próximo resultado...");
-                    }
+    //                 if (!buttonBet) {
 
-                }
+    //                     console.log(`Apostando G${gale}`, valorAposta * 2 ** gale);
+    //                     console.log("Verificando próximo resultado...");
+    //                 }
 
-            } else {
+    //             }
 
-                await driver.sleep(6000)
+    //         } else {
 
-                now = new Date();
-                console.log(horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)));
+    //             await driver.sleep(6000)
 
-                if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)) && parseInt(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(6, 8)) > 30) {
+    //             now = new Date();
+    //             console.log(horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)));
 
-                    indice = horarios.indexOf(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))
+    //             if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)) && parseInt(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(6, 8)) > 30) {
 
-                    console.log("Retirando", horarios[indice], indice);
+    //                 indice = horarios.indexOf(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))
 
-                    horarios.splice(indice, 1);
+    //                 console.log("Retirando", horarios[indice], indice);
 
-                } else if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))) {
+    //                 horarios.splice(indice, 1);
 
-                    if (!buttonBet) {
-                        console.log("Apostando SG", valorAposta * 2 ** gale);
-                        console.log("Verificando próximo resultado...");
+    //             } else if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))) {
 
-                        verifyNextResult = true;
+    //                 if (!buttonBet) {
+    //                     console.log("Apostando SG", valorAposta * 2 ** gale);
+    //                     console.log("Verificando próximo resultado...");
 
-                        indice = horarios.indexOf(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))
-                    }
+    //                     verifyNextResult = true;
 
-                }
-            }
+    //                     indice = horarios.indexOf(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))
+    //                 }
 
-            // console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
+    //             }
+    //         }
 
-            console.log("");
+    //         // console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
 
-            lastId = actualId
+    //         console.log("");
 
-            buttonBet = true;
-        }
-    }
+    //         lastId = actualId
+
+    //         buttonBet = true;
+    //     }
+    // }
 
 })()
