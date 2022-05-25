@@ -40,7 +40,7 @@ console.log("Rodando web scraping");
     await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0vc8flq"]/button/span')).click()
 
 
-    await driver.sleep(5000)
+    await driver.sleep(10000)
 
     await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys('luiztrineves@gmail.com')
     await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys('@Bet15')
@@ -58,7 +58,7 @@ console.log("Rodando web scraping");
 
     await driver.get("https://www.sinaisvips.com.br/sinaisdecrash2x-blaze")
 
-    await driver.sleep(5000)
+    await driver.sleep(10000)
 
     await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys('luiztrineves@gmail.com')
     await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys('@Bet15')
