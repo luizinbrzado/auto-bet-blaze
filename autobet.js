@@ -89,7 +89,7 @@ console.log("Rodando web scraping");
         }
     );
 
-    console.log(await driver.findElement(webdriver.By.xpath('/html')));
+    console.log(await driver.findElement(webdriver.By.xpath('/html')).getText());
 
     // await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div/div[1]/a')).click()
     // await driver.sleep(2000)
