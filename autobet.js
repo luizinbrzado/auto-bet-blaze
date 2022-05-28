@@ -15,15 +15,9 @@ console.log("Rodando web scraping");
     let serviceBuilder = new chrome.ServiceBuilder(process.env.CHROME_DRIVER_PATH);
 
     //Don't forget to add these for heroku
-    options.addArguments("start-maximized");
-    options.addArguments("disable-infobars")
-    options.addArguments("--disable-extensions")
-    options.addArguments("--disable-gpu");
-    options.addArguments("--disable-dev-shm-usage");
-    options.addArguments("--no-sandbox");
     options.addArguments("--headless");
-    // options.addArguments("--disable-gpu");
-    // options.addArguments("--no-sandbox");
+    options.addArguments("--disable-gpu");
+    options.addArguments("--no-sandbox");
     options.addArguments("--window-size=1920,1080")
 
 
