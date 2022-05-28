@@ -92,228 +92,224 @@ console.log("Rodando web scraping");
 
     await driver.sleep(10000)
 
-    console.log(await driver.findElement(webdriver.By.xpath('/html')).getText());
-
     await driver.takeScreenshot().then(
         function (image) {
             require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
         }
     );
 
-    console.log(await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div/div[1]/a')).getText());
     await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div/div[1]/a')).click()
     await driver.sleep(5000)
     await driver.findElement(webdriver.By.xpath('//*[@id="auth-modal"]/div[2]/form/div[1]/div/input')).sendKeys(process.env.USER)
     await driver.findElement(webdriver.By.xpath('//*[@id="auth-modal"]/div[2]/form/div[2]/div/input')).sendKeys(process.env.PASS)
     await driver.findElement(webdriver.By.xpath('//*[@id="auth-modal"]/div[2]/form/div[4]/button')).click()
 
-    await driver.sleep(5000)
+    // await driver.sleep(5000)
 
-    let lastId = '';
+    // let lastId = '';
 
-    let perdaGanho = 0;
+    // let perdaGanho = 0;
 
-    let gale = 0;
+    // let gale = 0;
 
-    let verifyNextResult = false;
+    // let verifyNextResult = false;
 
-    let indice = ''
+    // let indice = ''
 
-    await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[2]/div[1]/input')).sendKeys(2);
+    // await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[2]/div[1]/input')).sendKeys(2);
 
-    await driver.sleep(1000);
+    // await driver.sleep(1000);
 
-    await driver.takeScreenshot().then(
-        function (image) {
-            require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
-        }
-    );
+    // await driver.takeScreenshot().then(
+    //     function (image) {
+    //         require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
+    //     }
+    // );
 
-    console.log(sinais[0].sinais);
 
-    let valorConta = await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div[3]/div/a/div/div/div')).getText();
+    // let valorConta = await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div[3]/div/a/div/div/div')).getText();
 
-    console.log(valorConta);
+    // console.log(valorConta);
 
-    let horarios = sinais[0].sinais;
+    // let horarios = sinais[0].sinais;
 
-    let valorAposta = 2;
+    // let valorAposta = 2;
 
-    let buttonBet = '';
+    // let buttonBet = '';
 
-    now = new Date();
+    // now = new Date();
 
-    horarios = horarios.filter((e) => {
-        return e > now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)
-    })
+    // horarios = horarios.filter((e) => {
+    //     return e > now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)
+    // })
 
-    horarios.sort((a, b) => {
-        return a.localeCompare(b)
-    })
+    // horarios.sort((a, b) => {
+    //     return a.localeCompare(b)
+    // })
 
-    await driver.sleep(2000)
+    // await driver.sleep(2000)
 
-    await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(2)
+    // await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(2)
 
-    await driver.sleep(2000)
+    // await driver.sleep(2000)
 
-    console.log(horarios);
+    // console.log(horarios);
 
-    let stopWin = 50;
+    // let stopWin = 50;
 
-    let stopLoss = -100;
+    // let stopLoss = -100;
 
-    while (true) {
+    // while (true) {
 
-        if (now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5) > horarios[0])
-            horarios.splice(0, 1)
+    //     if (now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5) > horarios[0])
+    //         horarios.splice(0, 1)
 
-        let lastResult;
-        let actualId;
+    //     let lastResult;
+    //     let actualId;
 
-        await driver.sleep(500)
+    //     await driver.sleep(500)
 
-        now = new Date();
+    //     now = new Date();
 
-        try {
-            actualId = await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getId()
-        } catch (err) {
-            console.log("Não deu pra pegar o ID da classe");
-            actualId = await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getId()
-            return null;
-        }
+    //     try {
+    //         actualId = await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getId()
+    //     } catch (err) {
+    //         console.log("Não deu pra pegar o ID da classe");
+    //         actualId = await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getId()
+    //         return null;
+    //     }
 
-        await driver.sleep(500)
+    //     await driver.sleep(500)
 
-        try {
-            lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
-            buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
-        } catch (err) {
-            lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
-            console.log("Não deu pra pegar info do BOTÃO");
-            return null;
-        }
+    //     try {
+    //         lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
+    //         buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
+    //     } catch (err) {
+    //         lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
+    //         console.log("Não deu pra pegar info do BOTÃO");
+    //         return null;
+    //     }
 
-        if (actualId != lastId) {
+    //     if (actualId != lastId) {
 
-            try {
-                buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
-                if (lastResult === NaN) {
-                    await driver.sleep(1000);
-                    lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
-                }
-            } catch (err) {
-                console.log("Não deu pra pegar info do BOTÃO");
-                return null;
-            }
+    //         try {
+    //             buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
+    //             if (lastResult === NaN) {
+    //                 await driver.sleep(1000);
+    //                 lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
+    //             }
+    //         } catch (err) {
+    //             console.log("Não deu pra pegar info do BOTÃO");
+    //             return null;
+    //         }
 
-            console.log("Próximo horário a apostar", horarios[0]);
+    //         console.log("Próximo horário a apostar", horarios[0]);
 
-            console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
+    //         console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
 
-            if (verifyNextResult) {
-                gale++;
-                if (gale === 3) {
-                    if (lastResult > 2)
-                        console.log("WIN");
-                    else {
-                        perdaGanho -= valorAposta * 7;
-                        console.log("LOSS G2");
-                    }
+    //         if (verifyNextResult) {
+    //             gale++;
+    //             if (gale === 3) {
+    //                 if (lastResult > 2)
+    //                     console.log("WIN");
+    //                 else {
+    //                     perdaGanho -= valorAposta * 7;
+    //                     console.log("LOSS G2");
+    //                 }
 
-                    verifyNextResult = false;
-                    gale = 0;
-                } else if (lastResult > 2) {
+    //                 verifyNextResult = false;
+    //                 gale = 0;
+    //             } else if (lastResult > 2) {
 
-                    console.log("WIN");
+    //                 console.log("WIN");
 
-                    console.log("Retirando", horarios[indice], indice);
+    //                 console.log("Retirando", horarios[indice], indice);
 
-                    horarios.splice(indice, 1);
+    //                 horarios.splice(indice, 1);
 
-                    verifyNextResult = false;
+    //                 verifyNextResult = false;
 
-                    perdaGanho += valorAposta;
+    //                 perdaGanho += valorAposta;
 
-                    gale = 0;
+    //                 gale = 0;
 
-                } else {
+    //             } else {
 
-                    if (gale === 1)
-                        console.log('LOSS SG');
-                    else
-                        console.log(`LOSS G1`);
+    //                 if (gale === 1)
+    //                     console.log('LOSS SG');
+    //                 else
+    //                     console.log(`LOSS G1`);
 
-                    await driver.sleep(6000)
+    //                 await driver.sleep(6000)
 
-                    if (!buttonBet) {
+    //                 if (!buttonBet) {
 
-                        // Colocando valor da aposta G1 e G2 no input
-                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(webdriver.Key.CONTROL + "a")
-                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(valorAposta * 2 ** gale)
+    //                     // Colocando valor da aposta G1 e G2 no input
+    //                     await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(webdriver.Key.CONTROL + "a")
+    //                     await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(valorAposta * 2 ** gale)
 
-                        // Clicando para apostar
-                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).click()
+    //                     // Clicando para apostar
+    //                     await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).click()
 
-                        console.log(`Apostando G${gale}`, valorAposta * 2 ** gale);
-                        console.log("Verificando próximo resultado...");
+    //                     console.log(`Apostando G${gale}`, valorAposta * 2 ** gale);
+    //                     console.log("Verificando próximo resultado...");
 
-                    }
-                }
+    //                 }
+    //             }
 
-            } else {
+    //         } else {
 
-                await driver.sleep(6000)
+    //             await driver.sleep(6000)
 
-                now = new Date();
-                console.log(horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)));
+    //             now = new Date();
+    //             console.log(horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)));
 
-                if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)) && parseInt(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(6, 8)) < 30) {
+    //             if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)) && parseInt(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(6, 8)) < 30) {
 
-                    indice = horarios.indexOf(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))
+    //                 indice = horarios.indexOf(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))
 
-                    console.log("Retirando", horarios[indice], indice);
+    //                 console.log("Retirando", horarios[indice], indice);
 
-                    console.log(horarios);
+    //                 console.log(horarios);
 
-                    horarios.splice(indice, 1);
+    //                 horarios.splice(indice, 1);
 
-                } else if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))) {
+    //             } else if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))) {
 
-                    if (!buttonBet) {
+    //                 if (!buttonBet) {
 
-                        // Colocando valor da aposta SG no input
-                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(webdriver.Key.CONTROL + "a")
-                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(valorAposta * 2 ** gale)
+    //                     // Colocando valor da aposta SG no input
+    //                     await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(webdriver.Key.CONTROL + "a")
+    //                     await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(valorAposta * 2 ** gale)
 
-                        // Clicando para apostar
-                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).click()
+    //                     // Clicando para apostar
+    //                     await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).click()
 
-                        console.log("Apostando SG", valorAposta * 2 ** gale);
-                        console.log("Verificando próximo resultado...");
+    //                     console.log("Apostando SG", valorAposta * 2 ** gale);
+    //                     console.log("Verificando próximo resultado...");
 
-                        verifyNextResult = true;
+    //                     verifyNextResult = true;
 
-                        indice = horarios.indexOf(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))
-                    }
+    //                     indice = horarios.indexOf(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))
+    //                 }
 
-                }
-            }
+    //             }
+    //         }
 
-            // console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
+    //         // console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
 
-            console.log("");
+    //         console.log("");
 
-            lastId = actualId
+    //         lastId = actualId
 
-            buttonBet = true;
+    //         buttonBet = true;
 
-            if (perdaGanho >= stopWin) {
-                process.exit(0);
-            } else if (perdaGanho <= stopLoss) {
-                process.exit(0);
-            }
-        }
-    }
+    //         if (perdaGanho >= stopWin) {
+    //             process.exit(0);
+    //         } else if (perdaGanho <= stopLoss) {
+    //             process.exit(0);
+    //         }
+    //     }
+    // }
 
 })()
