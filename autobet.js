@@ -42,13 +42,11 @@ console.log("Rodando web scraping");
 
     await driver.sleep(10000)
 
-    await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys('luiztrineves@gmail.com')
-    await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys('@Bet15')
+    await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys(process.env.USER_SINAIS)
+    await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys(process.env.PASS_SINAIS)
     await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0twycwi"]/button')).click()
 
     await driver.sleep(5000)
-
-    // await driver.sleep(2000)
 
     // await driver.takeScreenshot().then(
     //     function (image) {
@@ -58,15 +56,8 @@ console.log("Rodando web scraping");
 
     await driver.get("https://www.sinaisvips.com.br/sinaisdecrash2x-blaze")
 
-    // await driver.sleep(10000)
-
-    // await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys('luiztrineves@gmail.com')
-    // await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys('@Bet15')
-    // await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0twycwi"]/button')).click()
-
-    
     let horariosSite = await driver.findElement(webdriver.By.xpath('//*[@id="comp-l10j12x6"]')).getText();
-    
+
     await driver.sleep(5000)
 
     let now = new Date();
@@ -90,8 +81,6 @@ console.log("Rodando web scraping");
         }
     );
 
-    console.log(await driver.findElement(webdriver.By.xpath('/html')).getText());
-
     await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div/div[1]/a')).click()
     await driver.sleep(5000)
     await driver.findElement(webdriver.By.xpath('//*[@id="auth-modal"]/div[2]/form/div[1]/div/input')).sendKeys(process.env.USER)
@@ -102,25 +91,11 @@ console.log("Rodando web scraping");
 
     let lastId = '';
 
-    let lossSequence = 0;
-
     let perdaGanho = 0;
 
     let gale = 0;
 
-    let win = 0;
-
-    let winsNecessarias = 10;
-
-    let betLoss = 0;
-
     let verifyNextResult = false;
-
-    let qtdLossAposta = 6;
-
-    let today = new Date();
-
-    let betDay = new Date();
 
     let indice = ''
 
@@ -140,7 +115,7 @@ console.log("Rodando web scraping");
 
     let horarios = []
 
-    fs.readFile('21_05_2022.json', 'utf8', (err, data) => {
+    fs.readFile(`${now.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' }).replace(/\//g, '_')}.json`, 'utf8', (err, data) => {
         err ?
             console.error(err)
             :
@@ -153,15 +128,25 @@ console.log("Rodando web scraping");
 
     now = new Date();
 
-    horarios.map((e, i) => {
-        if (now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5) > e) {
-            horarios.splice(i, 1);
-        }
+    horarios = horarios.filter((e) => {
+        return e > now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)
     })
+
+    horarios.sort((a, b) => {
+        return a.localeCompare(b)
+    })
+
+    await driver.sleep(2000)
 
     await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(2)
 
+    await driver.sleep(2000)
+
     console.log(horarios);
+
+    let stopWin = 50;
+
+    let stopLoss = -100;
 
     while (true) {
 
@@ -173,22 +158,23 @@ console.log("Rodando web scraping");
 
         await driver.sleep(500)
 
-        now = new Date();
-
-        console.log(buttonBet);
+        now = new Date();        
 
         try {
             actualId = await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getId()
-            lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
         } catch (err) {
             console.log("Não deu pra pegar o ID da classe");
-            lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
+            actualId = await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getId()
             return null;
         }
 
+        await driver.sleep(500)
+
         try {
+            lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
             buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
         } catch (err) {
+            lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
             console.log("Não deu pra pegar info do BOTÃO");
             return null;
         }
@@ -197,14 +183,16 @@ console.log("Rodando web scraping");
 
             try {
                 buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
-                if (lastResult === NaN)
+                if (lastResult === NaN) {
+                    await driver.sleep(1000);
                     lastResult = parseFloat((await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getText()).slice(0, -1))
+                }
             } catch (err) {
                 console.log("Não deu pra pegar info do BOTÃO");
                 return null;
             }
 
-            console.log(buttonBet);
+            console.log("Próximo horário a apostar", horarios[0]);
 
             console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
 
@@ -213,8 +201,10 @@ console.log("Rodando web scraping");
                 if (gale === 3) {
                     if (lastResult > 2)
                         console.log("WIN");
-                    else
+                    else {
+                        perdaGanho -= valorAposta * 7;
                         console.log("LOSS G2");
+                    }
 
                     verifyNextResult = false;
                     gale = 0;
@@ -227,6 +217,9 @@ console.log("Rodando web scraping");
                     horarios.splice(indice, 1);
 
                     verifyNextResult = false;
+
+                    perdaGanho += valorAposta;
+
                     gale = 0;
 
                 } else {
@@ -240,10 +233,17 @@ console.log("Rodando web scraping");
 
                     if (!buttonBet) {
 
+                        // Colocando valor da aposta G1 e G2 no input
+                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(webdriver.Key.CONTROL + "a")
+                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(valorAposta * 2 ** gale)
+
+                        // Clicando para apostar
+                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).click()
+
                         console.log(`Apostando G${gale}`, valorAposta * 2 ** gale);
                         console.log("Verificando próximo resultado...");
-                    }
 
+                    }
                 }
 
             } else {
@@ -253,17 +253,27 @@ console.log("Rodando web scraping");
                 now = new Date();
                 console.log(horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)));
 
-                if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)) && parseInt(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(6, 8)) > 30) {
+                if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)) && parseInt(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(6, 8)) < 30) {
 
                     indice = horarios.indexOf(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))
 
                     console.log("Retirando", horarios[indice], indice);
+
+                    console.log(horarios);
 
                     horarios.splice(indice, 1);
 
                 } else if (horarios.includes(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5))) {
 
                     if (!buttonBet) {
+
+                        // Colocando valor da aposta SG no input
+                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(webdriver.Key.CONTROL + "a")
+                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[1]/div/div[1]/input')).sendKeys(valorAposta * 2 ** gale)
+
+                        // Clicando para apostar
+                        await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).click()
+
                         console.log("Apostando SG", valorAposta * 2 ** gale);
                         console.log("Verificando próximo resultado...");
 
@@ -282,6 +292,12 @@ console.log("Rodando web scraping");
             lastId = actualId
 
             buttonBet = true;
+
+            if (perdaGanho >= stopWin) {
+                process.exit(0);
+            } else if (perdaGanho <= stopLoss) {
+                process.exit(0);
+            }
         }
     }
 
