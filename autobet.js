@@ -15,9 +15,9 @@ console.log("Rodando web scraping");
     let serviceBuilder = new chrome.ServiceBuilder(process.env.CHROME_DRIVER_PATH);
 
     //Don't forget to add these for heroku
-    options.addArguments("--headless");
-    options.addArguments("--disable-gpu");
-    options.addArguments("--no-sandbox");
+    // options.addArguments("--headless");
+    // options.addArguments("--disable-gpu");
+    // options.addArguments("--no-sandbox");
     options.addArguments("--window-size=1920,1080")
 
 
@@ -27,10 +27,7 @@ console.log("Rodando web scraping");
         .setChromeService(serviceBuilder)
         .build();
 
-    await driver.manage().window().maximize();
-
     await driver.get("https://www.sinaisvips.com.br/sinais")
-    await driver.manage().window().maximize()
 
     await driver.sleep(5000)
 
@@ -158,7 +155,7 @@ console.log("Rodando web scraping");
 
         await driver.sleep(500)
 
-        now = new Date();        
+        now = new Date();
 
         try {
             actualId = await driver.findElement(webdriver.By.xpath('//*[@id="crash-recent"]/div[2]/div[2]/span[1]')).getId()
