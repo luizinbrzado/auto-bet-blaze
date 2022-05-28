@@ -91,7 +91,7 @@ console.log("Rodando web scraping");
 
     await driver.sleep(5000)
 
-    console.log(await driver.findElement(By.xpath('/html')).getText());
+    console.log(await driver.findElement(webdriver.By.xpath('/html')).getText());
 
     await driver.takeScreenshot().then(
         function (image) {
