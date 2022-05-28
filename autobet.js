@@ -1,5 +1,3 @@
-'use strict'
-
 const chrome = require('selenium-webdriver/chrome');
 let webdriver = require('selenium-webdriver');
 let https = require("https");
@@ -27,50 +25,72 @@ console.log("Rodando web scraping");
         .setChromeService(serviceBuilder)
         .build();
 
-    await driver.get("https://www.sinaisvips.com.br/sinais")
+    // await driver.get("https://www.sinaisvips.com.br/sinais")
 
-    await driver.sleep(5000)
+    // await driver.sleep(5000)
 
-    await driver.findElement(webdriver.By.xpath('//*[@id="comp-l137vjdb"]/div')).click()
+    // await driver.findElement(webdriver.By.xpath('//*[@id="comp-l137vjdb"]/div')).click()
 
-    await driver.sleep(5000)
-    await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0vc8flq"]/button/span')).click()
+    // await driver.sleep(5000)
+    // await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0vc8flq"]/button/span')).click()
 
 
-    await driver.sleep(10000)
+    // await driver.sleep(10000)
 
-    await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys(process.env.USER_SINAIS)
-    await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys(process.env.PASS_SINAIS)
-    await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0twycwi"]/button')).click()
+    // await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys(process.env.USER_SINAIS)
+    // await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys(process.env.PASS_SINAIS)
+    // await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0twycwi"]/button')).click()
 
-    await driver.sleep(5000)
+    // await driver.sleep(5000)
 
-    // await driver.takeScreenshot().then(
-    //     function (image) {
-    //         require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
-    //     }
-    // );
+    // // await driver.takeScreenshot().then(
+    // //     function (image) {
+    // //         require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
+    // //     }
+    // // );
 
-    await driver.get("https://www.sinaisvips.com.br/sinaisdecrash2x-blaze")
+    // await driver.get("https://www.sinaisvips.com.br/sinaisdecrash2x-blaze")
 
-    let horariosSite = await driver.findElement(webdriver.By.xpath('//*[@id="comp-l10j12x6"]')).getText();
+    // let horariosSite = await driver.findElement(webdriver.By.xpath('//*[@id="comp-l10j12x6"]')).getText();
 
-    await driver.sleep(5000)
+    // await driver.sleep(5000)
 
+
+    // fs.writeFile(`${now.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' }).replace(/\//g, '_')}.json`,
+    //     `[${horariosSite
+    //         .replace(/ $/, '')
+    //         .replace(/\s+/g, ' , ')
+    //         .replace(/\s+/g, '"')
+    //         .replace('', '"')
+    //         .concat('"')}]`, () => {
+    //         })
     let now = new Date();
 
-    fs.writeFile(`${now.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' }).replace(/\//g, '_')}.json`,
-        `[${horariosSite
-            .replace(/ $/, '')
-            .replace(/\s+/g, ' , ')
-            .replace(/\s+/g, '"')
-            .replace('', '"')
-            .concat('"')}]`, () => {
-            })
+    var sinais = []
+
+    https.get('https://webcrepe-mongodb.herokuapp.com/sinais', (resp) => {
+        let data = '';
+
+        // A chunk of data has been received.
+        resp.on('data', (chunk) => {
+            data += chunk;
+        });
+
+        // The whole response has been received. Print out the result.
+        resp.on('end', () => {
+            sinais = JSON.parse(data)
+
+            console.log(sinais[0].sinais);
+        });
+
+    }).on("error", (err) => {
+        console.log("Error: " + err.message);
+    });
 
     await driver.get("https://blaze.com/pt/games/crash")
 
-    await driver.sleep(10000)
+    await driver.sleep(5000)
+
 
     await driver.takeScreenshot().then(
         function (image) {
@@ -106,18 +126,13 @@ console.log("Rodando web scraping");
         }
     );
 
+    console.log(sinais[0].sinais);
+
     let valorConta = await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div[3]/div/a/div/div/div')).getText();
 
     console.log(valorConta);
 
-    let horarios = []
-
-    fs.readFile(`${now.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' }).replace(/\//g, '_')}.json`, 'utf8', (err, data) => {
-        err ?
-            console.error(err)
-            :
-            horarios = JSON.parse(data);
-    });
+    let horarios = sinais[0].sinais;
 
     let valorAposta = 2;
 
