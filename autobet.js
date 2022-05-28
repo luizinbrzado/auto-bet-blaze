@@ -64,6 +64,7 @@ console.log("Rodando web scraping");
     //         .replace('', '"')
     //         .concat('"')}]`, () => {
     //         })
+
     let now = new Date();
 
     var sinais = []
@@ -89,7 +90,7 @@ console.log("Rodando web scraping");
 
     await driver.get("https://blaze.com/pt/games/crash")
 
-    await driver.sleep(5000)
+    await driver.sleep(10000)
 
     console.log(await driver.findElement(webdriver.By.xpath('/html')).getText());
 
