@@ -1,9 +1,10 @@
 {
   "scripts": {
-    "start": "node autobet.js"
+    "start": "node crashAutoBet.js"
   },
   "dependencies": {
     "dotenv": "^16.0.0",
+    "prompt-sync": "^4.2.0",
     "selenium-webdriver": "^4.1.1"
   }
 }

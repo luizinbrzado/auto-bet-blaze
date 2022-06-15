@@ -51,6 +51,8 @@ var backgroundWhite = '\u001b[47m';
         .setChromeService(serviceBuilder)
         .build();
 
+    let now = new Date();
+
     async function getHorarios() {
 
         await driver.get("https://www.sinaisvips.com.br/sinais")
@@ -58,11 +60,11 @@ var backgroundWhite = '\u001b[47m';
 
         await driver.sleep(5000)
 
-        await driver.takeScreenshot().then(
-            function (image) {
-                require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
-            }
-        );
+        // await driver.takeScreenshot().then(
+        //     function (image) {
+        //         require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
+        //     }
+        // );
 
         await driver.findElement(webdriver.By.xpath('//*[@id="comp-l137vjdb"]/div')).click()
         await driver.sleep(5000)
@@ -70,8 +72,8 @@ var backgroundWhite = '\u001b[47m';
 
         await driver.sleep(5000)
 
-        await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys('luiztrineves@gmail.com')
-        await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys('@Bet15')
+        await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys(process.env.USER_SINAIS)
+        await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys(process.env.PASS_SINAIS)
         await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0twycwi"]/button')).click()
 
         await driver.sleep(5000)
@@ -195,7 +197,13 @@ var backgroundWhite = '\u001b[47m';
         resp.on('end', () => {
             sinais = JSON.parse(data)
 
-            console.log(sinais[0].sinais);
+            for (let i = 0; i < sinais.length; i++) {
+                if (sinais[i].dia === now.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' })) {
+                    sinais = sinais[i]
+                }
+            }
+
+            console.log(sinais.sinais);
         });
 
     }).on("error", (err) => {
@@ -206,11 +214,11 @@ var backgroundWhite = '\u001b[47m';
 
     await driver.sleep(10000)
 
-    await driver.takeScreenshot().then(
-        function (image) {
-            require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
-        }
-    );
+    // await driver.takeScreenshot().then(
+    //     function (image) {
+    //         require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
+    //     }
+    // );
 
     await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div/div[1]/a')).click()
     await driver.sleep(5000)
@@ -230,27 +238,28 @@ var backgroundWhite = '\u001b[47m';
 
     let horarioPraRetirar = ''
 
-    await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[2]/div[1]/input')).sendKeys(2);
+    let elAutoRetirar = await driver.findElement(By.xpath(`//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[2]/div[1]/input`));
+    await driver.wait(until.elementIsEnabled(elAutoRetirar), 10000).then(async () => {
+        await driver.findElement(By.xpath(`//*[@id="crash-controller"]/div[1]/div[2]/div[1]/div[2]/div[1]/input`)).sendKeys(2)
+    })
 
     await driver.sleep(1000);
 
-    await driver.takeScreenshot().then(
-        function (image) {
-            require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
-        }
-    );
+    // await driver.takeScreenshot().then(
+    //     function (image) {
+    //         require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
+    //     }
+    // );
 
     let valorConta = await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div[3]/div/a/div/div/div')).getText();
 
     console.log(valorConta);
 
-    let horariosCrash = sinais[0].sinais;
+    let horariosCrash = sinais.sinais;
 
-    let valorAposta = 5;
+    let valorAposta = 2;
 
     let buttonBet = '';
-
-    let now = new Date();
 
     horariosCrash = horariosCrash.filter((e) => {
         return e > now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5)
@@ -283,6 +292,15 @@ ${bold} StopLoss: ${red}${stopLoss} ${reset}\n`
         let lastResult;
         let actualId;
 
+        if (horariosCrash[0] === undefined) {
+            console.log(
+                `${yellow}Sinais acabaram, vamos apostar mais amanhã!
+Placar final: ${blue + bold}${placarWin} x ${placarLoss}${reset}
+${yellow}${perdaGanho > 0 ? `Parabéns, você ganhou ${green + bold}R$${perdaGanho}` : `Infelizmente você perdeu ${red + bold}R$${perdaGanho * -1}`}${reset}`
+            );
+            process.exit(0);
+        }
+
         await driver.sleep(500)
 
         now = new Date();
@@ -308,11 +326,6 @@ ${bold} StopLoss: ${red}${stopLoss} ${reset}\n`
 
         if (actualId != lastId) {
 
-            if (horariosCrash[0] === undefined) {
-                console.log(yellow, "Esperando por mais sinais");
-                process.exit(0);
-            }
-
             try {
                 buttonBet = await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).isEnabled()
                 if (lastResult === NaN) {
@@ -324,7 +337,6 @@ ${bold} StopLoss: ${red}${stopLoss} ${reset}\n`
                 return null;
             }
 
-            console.log("Próximo horário a apostar", `${purple + bold}${horariosCrash[0]}`, reset);
 
             console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
 
@@ -332,19 +344,31 @@ ${bold} StopLoss: ${red}${stopLoss} ${reset}\n`
                 gale++;
                 if (gale === 3) {
                     if (lastResult > 2) {
-                        console.log(`${backgroundGreen + bold} WIN ${reset}`);
+                        perdaGanho += valorAposta;
+                        console.log(`${backgroundGreen + bold} WIN ${reset} `);
                         placarWin++;
                     }
                     else {
                         perdaGanho -= valorAposta * 7;
                         console.log(gale);
-                        console.log(`${backgroundRed + bold} LOSS ${(gale === 1 && 'SG') || (gale === 2 && 'G1') || (gale === 3 && 'G2')} ${reset}`);
+                        console.log(`${backgroundRed + bold} LOSS ${(gale === 1 && 'SG') || (gale === 2 && 'G1') || (gale === 3 && 'G2')} ${reset} `);
                         placarLoss++;
+                    }
+
+                    if (horariosCrash.length !== 0) {
+                        console.log(`\n${bold + yellow} Próximo horário a apostar será às ${horariosCrash[0]} ${reset}`);
+                        console.log(`${backgroundMagenta + bold + yellow} Faltam ${horariosCrash.length} sinais${reset}\n`);
                     }
 
                     valorConta = await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div[3]/div/a/div/div/div')).getText();
 
-                    console.log(`${bold}Saldo: ${valorConta}\n${reset + bold}Placar: ${placarWin} x ${placarLoss}${reset}`);
+                    console.log("Retirando", horarioPraRetirar);
+
+                    horariosCrash = horariosCrash.filter((e, i) => {
+                        return e !== horarioPraRetirar
+                    })
+
+                    console.log(`${bold} Saldo: ${valorConta} \n${reset + bold} Placar: ${placarWin} x ${placarLoss}${reset} `);
 
                     verifyNextResult = false;
 
@@ -353,7 +377,13 @@ ${bold} StopLoss: ${red}${stopLoss} ${reset}\n`
 
                     placarWin++;
 
-                    console.log(`${backgroundGreen + bold} WIN ${reset}`);
+                    
+                    console.log(`${backgroundGreen + bold} WIN ${reset} `);
+
+                    if (horariosCrash.length !== 0) {
+                        console.log(`\n${bold + yellow} Próximo horário a apostar será às ${horariosCrash[0]} ${reset}`);
+                        console.log(`${backgroundMagenta + bold + yellow}Faltam ${horariosCrash.length} sinais${reset}\n`);
+                    }
 
                     console.log("Retirando", horarioPraRetirar);
                     horariosCrash = horariosCrash.filter((e, i) => {
@@ -366,13 +396,13 @@ ${bold} StopLoss: ${red}${stopLoss} ${reset}\n`
 
                     valorConta = await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div[3]/div/a/div/div/div')).getText();
 
-                    console.log(`${bold}Saldo: ${valorConta}\n${reset + bold}Placar: ${placarWin} x ${placarLoss}${reset}`);
+                    console.log(`${bold} Saldo: ${valorConta} \n${reset + bold} Placar: ${placarWin} x ${placarLoss}${reset} `);
 
                     gale = 0;
 
                 } else {
 
-                    console.log(`${backgroundRed + bold} LOSS ${(gale === 1 && 'SG') || (gale === 2 && 'G1') || (gale === 3 && 'G2')} ${reset}`);
+                    console.log(`${backgroundRed + bold} LOSS ${(gale === 1 && 'SG') || (gale === 2 && 'G1') || (gale === 3 && 'G2')} ${reset} `);
 
                     await driver.sleep(2000)
 
@@ -408,7 +438,7 @@ ${bold} StopLoss: ${red}${stopLoss} ${reset}\n`
                         // Clicando para apostar
                         await driver.findElement(webdriver.By.xpath('//*[@id="crash-controller"]/div[1]/div[2]/div[2]/button')).click()
 
-                        console.log(`${bold}Apostando SG - ${green}R$${valorAposta * 2 ** gale} ${reset}`);
+                        console.log(`${bold}Apostando SG - ${green}R$${valorAposta * 2 ** gale}${reset}`);
                         console.log("Verificando próximo resultado...");
 
                         verifyNextResult = true;
@@ -420,6 +450,8 @@ ${bold} StopLoss: ${red}${stopLoss} ${reset}\n`
             }
 
             // console.log(now.toLocaleTimeString('pt-br', { timezone: 'America/Sao_Paulo' }).slice(0, 5), lastResult);
+
+            console.log(`${bold + blue}${perdaGanho}${reset}`);
 
             console.log("");
 
