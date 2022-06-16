@@ -53,166 +53,176 @@ var backgroundWhite = '\u001b[47m';
 
     let now = new Date();
 
-    async function getHorarios() {
+    // async function getHorarios() {
 
-        await driver.get("https://www.sinaisvips.com.br/sinais")
-        await driver.manage().window().maximize()
+    //     await driver.get("https://www.sinaisvips.com.br/sinais")
+    //     await driver.manage().window().maximize()
 
-        await driver.sleep(5000)
+    //     await driver.sleep(5000)
 
-        // await driver.takeScreenshot().then(
-        //     function (image) {
-        //         require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
-        //     }
-        // );
+    //     // await driver.takeScreenshot().then(
+    //     //     function (image) {
+    //     //         require('fs').writeFileSync('./img/initial-page.png', image, 'base64');
+    //     //     }
+    //     // );
 
-        await driver.findElement(webdriver.By.xpath('//*[@id="comp-l137vjdb"]/div')).click()
-        await driver.sleep(5000)
-        await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0vc8flq"]/button/span')).click()
+    //     await driver.findElement(webdriver.By.xpath('//*[@id="comp-l137vjdb"]/div')).click()
+    //     await driver.sleep(5000)
+    //     await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0vc8flq"]/button/span')).click()
 
-        await driver.sleep(5000)
+    //     await driver.sleep(5000)
 
-        await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys(process.env.USER_SINAIS)
-        await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys(process.env.PASS_SINAIS)
-        await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0twycwi"]/button')).click()
+    //     await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys(process.env.USER_SINAIS)
+    //     await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys(process.env.PASS_SINAIS)
+    //     await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0twycwi"]/button')).click()
 
-        await driver.sleep(5000)
+    //     await driver.sleep(5000)
 
-        await driver.sleep(2000)
-        await driver.get("https://www.sinaisvips.com.br/sinais")
-        // await driver.findElement(webdriver.By.xpath('//*[@id="comp-l2mgh6qg"]/a')).click()
+    //     await driver.sleep(2000)
+    //     await driver.get("https://www.sinaisvips.com.br/sinais")
+    //     // await driver.findElement(webdriver.By.xpath('//*[@id="comp-l2mgh6qg"]/a')).click()
 
-        // await driver.sleep(5000)
+    //     // await driver.sleep(5000)
 
-        // await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys('luiztrineves@gmail.com')
-        // await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys('@Bet15')
-        // await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0twycwi"]/button')).click()
+    //     // await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycvn"]')).sendKeys('luiztrineves@gmail.com')
+    //     // await driver.findElement(webdriver.By.xpath('//*[@id="input_comp-l0twycw61"]')).sendKeys('@Bet15')
+    //     // await driver.findElement(webdriver.By.xpath('//*[@id="comp-l0twycwi"]/button')).click()
 
-        await driver.sleep(5000)
+    //     await driver.sleep(5000)
 
-        let horarios = [];
+    //     let horarios = [];
 
-        console.log(await driver.findElement(webdriver.By.xpath('/html')).getText());
+    //     console.log(await driver.findElement(webdriver.By.xpath('/html')).getText());
 
-        let testeData = await driver.findElement(webdriver.By.xpath('//*[@id="comp-l3v0r3fx"]/h3/span/span/span')).getText();
+    //     let testeData = await driver.findElement(webdriver.By.xpath('//*[@id="comp-l3v0r3fx"]/h3/span/span/span')).getText();
 
-        let naoAtualizou = false;
+    //     let naoAtualizou = false;
 
-        const amanha = new Date();
-        amanha.setHours(+24);
+    //     const amanha = new Date();
+    //     amanha.setHours(+24);
 
-        if (testeData.includes(amanha.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' }))) {
-            for (let index = 5; index <= 35; index++) {
-                let valor = await driver.findElement(webdriver.By.xpath(`/html/body/div/div/div[3]/div/main/div/div/div[2]/div/div/div/div[${index}]`)).getText()
-                if (valor !== '')
-                    horarios.push(`${(await driver.findElement(webdriver.By.xpath(`/html/body/div/div/div[3]/div/main/div/div/div[2]/div/div/div/div[${index}]`)).getText()).slice(0, 5)}`)
-            }
+    //     if (testeData.includes(amanha.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' }))) {
+    //         for (let index = 5; index <= 35; index++) {
+    //             let valor = await driver.findElement(webdriver.By.xpath(`/html/body/div/div/div[3]/div/main/div/div/div[2]/div/div/div/div[${index}]`)).getText()
+    //             if (valor !== '')
+    //                 horarios.push(`${(await driver.findElement(webdriver.By.xpath(`/html/body/div/div/div[3]/div/main/div/div/div[2]/div/div/div/div[${index}]`)).getText()).slice(0, 5)}`)
+    //         }
 
-        }
+    //     }
 
-        else {
-            naoAtualizou = true;
+    //     else {
+    //         naoAtualizou = true;
 
-            while (naoAtualizou) {
-                console.log("NÃO ATUALIZOU!");
-                testeData = await driver.findElement(webdriver.By.xpath('//*[@id="comp-l3v0r3fx"]/h3/span/span/span')).getText();
+    //         while (naoAtualizou) {
+    //             console.log("NÃO ATUALIZOU!");
+    //             testeData = await driver.findElement(webdriver.By.xpath('//*[@id="comp-l3v0r3fx"]/h3/span/span/span')).getText();
 
-                if (testeData.includes(amanha.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' }))) {
-                    for (let index = 5; index <= 35; index++) {
-                        let valor = await driver.findElement(webdriver.By.xpath(`/html/body/div/div/div[3]/div/main/div/div/div[2]/div/div/div/div[${index}]`)).getText()
-                        if (valor !== '')
-                            horarios.push(`${(await driver.findElement(webdriver.By.xpath(`/html/body/div/div/div[3]/div/main/div/div/div[2]/div/div/div/div[${index}]`)).getText()).slice(0, 5)}`)
-                    }
-                    break;
-                }
+    //             if (testeData.includes(amanha.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' }))) {
+    //                 for (let index = 5; index <= 35; index++) {
+    //                     let valor = await driver.findElement(webdriver.By.xpath(`/html/body/div/div/div[3]/div/main/div/div/div[2]/div/div/div/div[${index}]`)).getText()
+    //                     if (valor !== '')
+    //                         horarios.push(`${(await driver.findElement(webdriver.By.xpath(`/html/body/div/div/div[3]/div/main/div/div/div[2]/div/div/div/div[${index}]`)).getText()).slice(0, 5)}`)
+    //                 }
+    //                 break;
+    //             }
 
-                await driver.sleep(1000 * 60 * 30)
-            }
+    //             await driver.sleep(1000 * 60 * 30)
+    //         }
 
-        }
+    //     }
 
-        console.log(horarios);
+    //     console.log(horarios);
 
-        // let now = new Date();
+    //     // let now = new Date();
 
-        // fs.writeFile(
+    //     // fs.writeFile(
 
-        //     `${now.toLocaleDateString("pt-br", { timezone: "America/Sao_Paulo" }).replace(/\//g, "_")}.json`,
+    //     //     `${now.toLocaleDateString("pt-br", { timezone: "America/Sao_Paulo" }).replace(/\//g, "_")}.json`,
 
-        //     JSON.stringify(horarios),
+    //     //     JSON.stringify(horarios),
 
-        //     function (err) {
-        //         if (err) {
-        //             console.error('Crap happens');
-        //         }
-        //     }
-        // );
+    //     //     function (err) {
+    //     //         if (err) {
+    //     //             console.error('Crap happens');
+    //     //         }
+    //     //     }
+    //     // );
 
-        if (horarios.length) {
-            const data = JSON.stringify({
-                sinais: horarios,
-            })
+    //     if (horarios.length) {
+    //         const data = JSON.stringify({
+    //             sinais: horarios,
+    //         })
 
-            const optionsPost = {
-                hostname: 'webcrepe-mongodb.herokuapp.com',
-                path: '/sinais',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Content-Length': data.length,
-                },
-            }
+    //         const optionsPost = {
+    //             hostname: 'webcrepe-mongodb.herokuapp.com',
+    //             path: '/sinais',
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Content-Length': data.length,
+    //             },
+    //         }
 
-            const req = https.request(optionsPost, (res) => {
-                console.log(`statusCode: ${res.statusCode}`)
+    //         const req = https.request(optionsPost, (res) => {
+    //             console.log(`statusCode: ${res.statusCode}`)
 
-                res.on('data', (d) => {
-                    process.stdout.write(d)
-                })
-            })
+    //             res.on('data', (d) => {
+    //                 process.stdout.write(d)
+    //             })
+    //         })
 
-            req.on('error', (error) => {
-                console.error(error)
-            })
+    //         req.on('error', (error) => {
+    //             console.error(error)
+    //         })
 
-            req.write(data)
-            req.end()
+    //         req.write(data)
+    //         req.end()
 
-            let now = new Date();
+    //         let now = new Date();
 
-        }
-    }
+    //     }
+    // }
 
     var sinais = []
 
-    https.get('https://webcrepe-mongodb.herokuapp.com/sinais', (resp) => {
-        let data = '';
+    while (sinais.length === 0) {
+        https.get('https://webcrepe-mongodb.herokuapp.com/sinais', (resp) => {
+            let data = '';
 
-        // A chunk of data has been received.
-        resp.on('data', (chunk) => {
-            data += chunk;
-        });
+            // A chunk of data has been received.
+            resp.on('data', (chunk) => {
+                data += chunk;
+            });
 
-        // The whole response has been received. Print out the result.
-        resp.on('end', () => {
-            sinais = JSON.parse(data)
+            // The whole response has been received. Print out the result.
+            resp.on('end', () => {
 
-            for (let i = 0; i < sinais.length; i++) {
-                if (sinais[i].dia === now.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' })) {
-                    sinais = sinais[i]
+                for (let i = 0; i < JSON.parse(data).length; i++) {
+                    if (JSON.parse(data)[i].dia === now.toLocaleDateString('pt-br', { timezone: 'America/Sao_Paulo' })) {
+                        console.log(JSON.parse(data)[i].sinais);
+                        sinais = JSON.parse(data)[i]
+                    }
                 }
-            }
 
-            console.log(sinais.sinais);
+            });
+
+        }).on("error", (err) => {
+            console.log("Error: " + err.message);
         });
 
-    }).on("error", (err) => {
-        console.log("Error: " + err.message);
-    });
+        await driver.sleep(1000 * 10) // 10 segundos
+
+        if (sinais.length === 0) {
+            console.log('Tentando encontrar novos sinais daqui 30 minutos');
+            await driver.sleep(1000 * 60 * 30) // 30 minutos
+        }
+    }
 
     await driver.get("https://blaze.com/pt/games/crash")
 
     await driver.sleep(10000)
+
+    console.log(sinais.sinais);
 
     // await driver.takeScreenshot().then(
     //     function (image) {
@@ -257,7 +267,7 @@ var backgroundWhite = '\u001b[47m';
 
     let horariosCrash = sinais.sinais;
 
-    let valorAposta = 2;
+    let valorAposta = 5;
 
     let buttonBet = '';
 
@@ -277,7 +287,7 @@ var backgroundWhite = '\u001b[47m';
 
     console.log(horariosCrash);
 
-    const stopWin = 30, stopLoss = -28;
+    const stopWin = 1000, stopLoss = -100;
 
     let placarWin = 0, placarLoss = 0;
 
@@ -298,6 +308,7 @@ ${bold} StopLoss: ${red}${stopLoss} ${reset}\n`
 Placar final: ${blue + bold}${placarWin} x ${placarLoss}${reset}
 ${yellow}${perdaGanho > 0 ? `Parabéns, você ganhou ${green + bold}R$${perdaGanho}` : `Infelizmente você perdeu ${red + bold}R$${perdaGanho * -1}`}${reset}`
             );
+
             process.exit(0);
         }
 
@@ -355,10 +366,6 @@ ${yellow}${perdaGanho > 0 ? `Parabéns, você ganhou ${green + bold}R$${perdaGan
                         placarLoss++;
                     }
 
-                    if (horariosCrash.length !== 0) {
-                        console.log(`\n${bold + yellow} Próximo horário a apostar será às ${horariosCrash[0]} ${reset}`);
-                        console.log(`${backgroundMagenta + bold + yellow} Faltam ${horariosCrash.length} sinais${reset}\n`);
-                    }
 
                     valorConta = await driver.findElement(webdriver.By.xpath('//*[@id="header"]/div[2]/div/div[2]/div/div[3]/div/a/div/div/div')).getText();
 
@@ -367,6 +374,11 @@ ${yellow}${perdaGanho > 0 ? `Parabéns, você ganhou ${green + bold}R$${perdaGan
                     horariosCrash = horariosCrash.filter((e, i) => {
                         return e !== horarioPraRetirar
                     })
+
+                    if (horariosCrash.length !== 0) {
+                        console.log(`\n${bold + yellow} Próximo horário a apostar será às ${horariosCrash[0]} ${reset}`);
+                        console.log(`${backgroundMagenta + bold + yellow} Faltam ${horariosCrash.length} sinais${reset}\n`);
+                    }
 
                     console.log(`${bold} Saldo: ${valorConta} \n${reset + bold} Placar: ${placarWin} x ${placarLoss}${reset} `);
 
@@ -377,18 +389,17 @@ ${yellow}${perdaGanho > 0 ? `Parabéns, você ganhou ${green + bold}R$${perdaGan
 
                     placarWin++;
 
-                    
                     console.log(`${backgroundGreen + bold} WIN ${reset} `);
-
-                    if (horariosCrash.length !== 0) {
-                        console.log(`\n${bold + yellow} Próximo horário a apostar será às ${horariosCrash[0]} ${reset}`);
-                        console.log(`${backgroundMagenta + bold + yellow}Faltam ${horariosCrash.length} sinais${reset}\n`);
-                    }
 
                     console.log("Retirando", horarioPraRetirar);
                     horariosCrash = horariosCrash.filter((e, i) => {
                         return e !== horarioPraRetirar
                     })
+
+                    if (horariosCrash.length !== 0) {
+                        console.log(`\n${bold + yellow} Próximo horário a apostar será às ${horariosCrash[0]} ${reset}`);
+                        console.log(`${backgroundMagenta + bold + yellow}Faltam ${horariosCrash.length} sinais${reset}\n`);
+                    }
 
                     verifyNextResult = false;
 
